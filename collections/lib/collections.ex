@@ -14,6 +14,10 @@ defmodule Collections do
 
   """
   def capitalize(words) do
+    Enum.map(words, fn(word) ->
+      with <<c :: utf8, rest :: binary>> <- word,
+        do: String.upcase(<<c>>) <> rest
+    end)
   end
 
 
@@ -27,6 +31,9 @@ defmodule Collections do
 
   """
   def even(numbers) do
+    Enum.filter(numbers, fn(number) ->
+      rem(number, 2) == 0
+    end)
   end
 
 
@@ -40,6 +47,7 @@ defmodule Collections do
 
   """
   def long_word(words) do
+    Enum.max_by(words, &String.length/1)
   end
 
   @doc """
@@ -52,5 +60,11 @@ defmodule Collections do
   """
 
   def age_groups(persons) do
+    Enum.chunk_by(persons, fn(person) ->
+      %{age: age} = person
+      bound = round(age / 10)
+
+      "#{bound}-#{bound + 10}"
+    end)
   end
 end
